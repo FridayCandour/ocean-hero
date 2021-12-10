@@ -2065,18 +2065,8 @@ class bgPainter {
 };
 
       
-      const book = {
-        game,
-        entity,
-        imgPainter,
-        spriteSheetPainter,
-        audio,
-        bgPainter,
-      };
-      
-if (typeof module !== "undefined") {
-  module["exports"] = book;
-} else if(!window.game) window.game = book;
+
+    
 
 
 
@@ -2128,6 +2118,12 @@ if (typeof module !== "undefined") {
     lit,
     speaker,
     speakerStop,
+    game,
+        entity,
+        imgPainter,
+        spriteSheetPainter,
+        audio,
+        bgPainter,
   };
   // 43 apis contexts
 
