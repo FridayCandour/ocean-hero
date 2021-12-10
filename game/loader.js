@@ -1,5 +1,6 @@
 // here am loading all the needed images before hand
 game.loadImage([
+["assets/Images/hero.png","hero"],
 ["assets/Images/coin1.png","coin1"],
 ["assets/Images/coin2.png","coin2"],
 ["assets/Images/coin3.png","coin3"],
@@ -12,7 +13,6 @@ game.loadImage([
 ["assets/Images/block.png","block"],
 ['assets/Images/box.png','box'],
 ["assets/Images/bg1.jpg","sea"],
-["assets/Images/hero.png","hero"],
 ["assets/Images/bahamut.png","bad"],
 ["assets/Images/fire.png","fire"],
 ["assets/Images/explosion.png","explosion"]

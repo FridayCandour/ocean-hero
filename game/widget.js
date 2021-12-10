@@ -1,5 +1,5 @@
 
-let wig = new game.makeWidget("hud", "div")
+let wig = build("div")
 
 u(wig).style({
     width: "100%",
