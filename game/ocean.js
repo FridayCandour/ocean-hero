@@ -1,4 +1,5 @@
 game.backgroundImage(game.getImg("sea"));
+
 let swimmerR = new spriteSheetPainter(game.getImg("hero"), 4, 3);
 blockPainter = new imgPainter(game.getImg("box")),
 block = new entity("block", blockPainter);
@@ -7,7 +8,7 @@ let speed = 10;
 
 const swimmerbehavior = function (swimmer) {
     swimmerR.animateAllFrames = true;
-    hero.observeEntity(block)
+    swimmer.observeEntity(block)
     swimmerR.delay = 8;
     if (down === true) {
         swimmer.top += speed;
@@ -24,10 +25,13 @@ const swimmerbehavior = function (swimmer) {
     left = false;
     if (up === true) {
         swimmer.top -= speed;
+        makeSharks(1, swimmer);
     }
     up = false;
 };
 
-const hero = new entity("hero", swimmerR, swimmerbehavior);
-hero.config(400, 700, 60, 120)
-game.assemble(hero, block);
+
+const swimmer = new entity("swimmer", swimmerR, swimmerbehavior);
+swimmer.config(400, 700, 60, 120)
+game.assemble(swimmer, block);
+// game.toggleRendering()

@@ -1651,6 +1651,7 @@ const game = (function () {
     if (!started) {
       throw new Error("uiedbook: no entities has been assemmbled")
     }
+    
     if (pause) {
       window.requestAnimationFrame(animate);
             pause = false;
@@ -1701,11 +1702,7 @@ const game = (function () {
                   entitysArray.splice(i, 1);
                   --i;
                 }
-                
-                ent.update(painter);
-                ent.paint(painter);
-                ent.run(painter);
-                
+                ent.exec(painter, dt);
                 if (ent.border) {
                   ent.observeBorder(screen.width, screen.height);
                 }
@@ -1786,7 +1783,7 @@ class entity{
   this.delete = false; //  to delete an entity                        can be used out side here******
   this.border = true; //   to make the entity observer sides or not   can be used out side here******
     this.isHit = false;
-    this.credentials = false;
+    this.callBacks = null;
 }
 
 config(top, left, bottom, right) {
@@ -1808,25 +1805,31 @@ observeEntity = function (ent) {
   }
 }
 
-
-  update(context, lastDeltalTime) {
+  exec(context, lastDeltalTime) {
     if (this.painter.update && this.visible) {
       this.painter.update(this, context, lastDeltalTime);
     }
-  }
+  
 
-
-  paint(context, lastDeltalTime) {
-    if (!this.credentials) {
-      this.credentials = [this, context, lastDeltalTime]
-    }
     if (this.painter.paint && this.visible) {
       this.painter.paint(this, context, lastDeltalTime);
     } else {
       throw new Error(`uiedbook: entity with name of ${this.name} has no paint function`);
     }
-  }
 
+    if (this.behaviors) {
+      this.behaviors(this, context, lastDeltalTime);
+    }
+
+    if (Array.isArray(this.callBacks)) {
+      this.callBacks.forEach((fuc) => fuc.call(this, context, lastDeltalTime));
+    }
+  
+}
+
+callBack(...functions) {
+  this.callBacks = [...functions];
+}
 
   observeBorder(w, h) {
     if (this.top <= 0) {
@@ -1842,19 +1845,6 @@ observeEntity = function (ent) {
       if (w && this.left + this.width >= w) {
         this.left = (w - this.width);
       }
-    }
-  }
-
-
-  run(context, lastDeltalTime) {
-    // here the entity don't have to be visble
-    if (this.behaviors) {
-      this.behaviors(this, context, lastDeltalTime);
-    }
-  }
-  callBack(...functions) {
-    if (Array.isArray(this.credentials)) {
-      functions.forEach((fuc) => fuc.call(...this.credentials));
     }
   }
 }
@@ -1906,7 +1896,7 @@ class spriteSheetPainter{
   this.animateAllFrames = (horizontal === 1) && (vertical === 1)? false: true;
   this.animate = true;
     this.rotate = false;
-    this.bugCorrecter = 3;
+    this.bugCorrecter = 5;
   }
   
   changeSheet(img, horizontal = 0, vertical = 0, delay = 1) {
@@ -1920,7 +1910,7 @@ class spriteSheetPainter{
   };
 
    animateFrameOf(frameY = 0) {
-    this.frameY = frameY;
+    this.frameY = frameY - 1;
    }
   
   
@@ -1959,7 +1949,7 @@ class spriteSheetPainter{
       this.range = 1;
     }
       
-    if (this.bugCorrecter > 1) {
+      if (this.bugCorrecter > 0) {
         this.bugCorrecter--;
       this.changeSheet(this.image, this.horizontalPictures,this.verticalPictures);
     }
@@ -2063,23 +2053,6 @@ class bgPainter {
     }
   }
 };
-
-      
-
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
